@@ -27,6 +27,19 @@ module Async =
     return r1,r2
   }
 
+  let toDigits (number :int32) =
+    Some number
+    |> Seq.unfold(Option.bind(fun current ->
+        let quotient, remainder = System.Math.DivRem(current, 10)
+        if quotient > 0 then
+          Some(remainder, Some quotient)
+        else
+          Some(remainder, None) // Yield the remaining result
+      )
+    )
+    |> Seq.rev
+
+
 module AsyncOperators =
 
   let inline (<!>) f x = Async.map f x
